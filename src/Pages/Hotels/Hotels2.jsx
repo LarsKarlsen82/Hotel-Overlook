@@ -1,11 +1,10 @@
+// Import necessary libraries and assets
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
 import { useSupabase } from '../../Providers/SupabaseProvider';
 import testCityImage from '../../Assets/images/Hotels_bg_img.jpg';
 
 const Hotels = () => {
   const { supabase } = useSupabase();
-  const navigate = useNavigate(); // Initialize the navigate function
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [selectedCity, setSelectedCity] = useState(null);
   const [countries, setCountries] = useState([]);
@@ -62,14 +61,12 @@ const Hotels = () => {
     }
   };
 
-// Function to handle city selection
-const handleCitySelect = async (city) => {
-  console.log('Selected city:', city); // Check if city data is correctly passed
-  setSelectedCity(city);
-  // Use navigate to redirect to HotelCity with the selected city data
-  navigate(`/hotels/${city.name}`, { state: { city } });
-};
-
+  // Function to handle city selection
+  const handleCitySelect = async (city) => {
+    setSelectedCity(city);
+    // Fetch hotels for the selected city
+    fetchHotelsByCity(city.id);
+  };
 
   // Function to fetch hotels by city ID
   const fetchHotelsByCity = async (cityId) => {
@@ -126,7 +123,7 @@ const handleCitySelect = async (city) => {
 {/* Display cities */}
 {selectedCountry && (
   <div className="cities mt-4">
-    <h2 className="text-xl font-bold mb-2">Vores byer i {selectedCountry.name}</h2>
+    <h2 className="text-xl font-bold mb-2">Vores Hoteller i {selectedCountry.name}</h2>
     <p>{selectedCountry.description}</p>
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
       {cities.map(city => (

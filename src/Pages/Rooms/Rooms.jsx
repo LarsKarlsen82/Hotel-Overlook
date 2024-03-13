@@ -66,6 +66,8 @@ const Rooms = () => {
           <img key={index} src={`https://ouxemfujuurkzesgdrsu.supabase.co/storage/v1/object/public/Test_storage/${image}.jpg`} alt={`Room ${selectedRoom}`} />
         ))}
       </div>
+              {/* Vertical red line on the right side */}
+              <div className="vl bg-gray-400 h-3/4 w-1 absolute lg:right-64 sm:right-0 right-0 lg:left-auto left-auto" />
     </div>
   );
 };
