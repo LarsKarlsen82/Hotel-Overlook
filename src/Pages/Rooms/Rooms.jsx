@@ -1,73 +1,62 @@
-import React, { useEffect, useState } from 'react';
+// Rooms.jsx
+import React, { useState, useEffect } from 'react';
 import { useSupabase } from '../../Providers/SupabaseProvider';
 
 const Rooms = () => {
   const { supabase } = useSupabase();
-  const [roomImages, setRoomImages] = useState([]);
-  const [selectedRoom, setSelectedRoom] = useState(null);
-  const [fetchError, setFetchError] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-
-  // Adjust the fetchRoomImages function to match your Supabase schema and column names
-  const fetchRoomImages = async (roomId) => {
-    try {
-      setIsLoading(true);
-
-      const { data, error } = await supabase
-        .from('images')
-        .select('filename') // Replace 'filename' with your actual column name for image filenames
-        .eq('id', roomId); // Adjust the condition based on your data structure
-
-      if (error) {
-        throw new Error('Error fetching room images');
-      }
-
-      if (data) {
-        const roomImage = data.length > 0 ? data[0].filename : null;
-        setRoomImages(roomImage ? [roomImage] : []);
-      }
-    } catch (error) {
-      console.error(error.message);
-      setFetchError('An error occurred while fetching data.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  // Generate an array of room IDs from 62 to 78
-  const roomIds = Array.from({ length: 17 }, (_, index) => index + 62);
+  const [rooms, setRooms] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (selectedRoom) {
-      const roomId = parseInt(selectedRoom);
-      fetchRoomImages(roomId);
-    }
-  }, [supabase, selectedRoom]);
+    const fetchRooms = async () => {
+      try {
+        // Fetch rooms
+        const { data: roomsData, error: roomsError } = await supabase.from('rooms').select('*');
+
+        if (roomsError) {
+          throw new Error('Error fetching rooms: ' + roomsError.message);
+        }
+
+        setRooms(roomsData);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error:', error.message);
+        setLoading(false);
+      }
+    };
+
+    fetchRooms();
+  }, [supabase]);
 
   return (
     <div>
-      {/* Your room selection UI here */}
-      {/* For example, a dropdown to select room type */}
-      <select onChange={(e) => setSelectedRoom(e.target.value)}>
-        <option value="">Select a room</option>
-        {roomIds.map((roomId) => (
-          <option key={roomId} value={roomId}>
-            Room {roomId}
-          </option>
-        ))}
-      </select>
-
-      {/* Display room images */}
-      <div>
-        <h2>Room Images</h2>
-        {isLoading && <p>Loading...</p>}
-        {fetchError && <p>{fetchError}</p>}
-        {roomImages.map((image, index) => (
-          <img key={index} src={`https://ouxemfujuurkzesgdrsu.supabase.co/storage/v1/object/public/Test_storage/${image}.jpg`} alt={`Room ${selectedRoom}`} />
+      <h2 className="text-2xl font-bold mb-4">Alle værelser</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {rooms.map(room => (
+          <div key={room.id} className="bg-white shadow-md rounded-md overflow-hidden">
+            {room.image_id && (
+              <img src={`https://ouxemfujuurkzesgdrsu.supabase.co/storage/v1/object/public/Test_storage/${room.image_id}.jpg`} alt={room.title} className="w-full h-40 object-cover" />
+            )}
+            <div className="p-4">
+              <h3 className="text-lg font-bold mb-2">{room.title}</h3>
+              <h4 className='font-bold'>Beskrivelse</h4>
+              <p>{room.description}</p>
+              <br />
+              <h4 className='font-bold'>Størrelse</h4>
+              <p>{room.area}</p>
+              <br />
+              <h4 className='font-bold'>Max antal personer</h4>
+              <p>{room.num_persons}</p>
+              <br />
+              <h4 className='font-bold'>Dag pris normal</h4>
+              <p>{room.day_price_normal} DKK</p>
+              <br />
+              <h4 className='font-bold'>Dag pris flex</h4>
+              <p>{room.day_price_flex} DKK</p>
+            </div>
+          </div>
         ))}
       </div>
-              {/* Vertical red line on the right side */}
-              <div className="vl bg-gray-400 h-3/4 w-1 absolute lg:right-64 sm:right-0 right-0 lg:left-auto left-auto" />
     </div>
   );
 };

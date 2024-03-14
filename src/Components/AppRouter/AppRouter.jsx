@@ -4,7 +4,7 @@ import NavBar from '../NavBar/NavBar';
 import Forside from '../../Pages/Forside/Forside';
 import Hotels from '../../Pages/Hotels/Hotels';
 import HotelCity from '../../Pages/Hotels/HotelCity';
-import HotelDetail from '../../Pages/Hotels/HotelDetails';
+import HotelDetails from '../../Pages/Hotels/HotelDetails';
 import Rooms from '../../Pages/Rooms/Rooms';
 import LoginPage  from '../../Pages/Login/Login'; 
 import Reservations from '../../Pages/Reservations/Reservations';
@@ -18,7 +18,7 @@ const AppRouter = () => {
           <Route path="/" element={<Forside />} />
           <Route path="/hotels" element={<Hotels />} />
           <Route path="/hotels/:city" element={<HotelCity />} />
-          <Route path="/hotels/:city/:hotel" element={<HotelDetail />} />
+          <Route path="/hotels/:city/:hotelId" element={<HotelDetails />} />
           <Route path="/rooms/" element={<Rooms />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/reservation" element={<Reservations />} />

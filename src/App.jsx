@@ -1,3 +1,4 @@
+import React from 'react';
 import './index.scss';
 import AppRouter from "./Components/AppRouter/AppRouter";
 import NavBar from "./Components/NavBar/NavBar";

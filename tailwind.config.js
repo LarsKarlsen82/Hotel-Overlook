@@ -10,7 +10,6 @@ module.exports = {
       },
       height: {
         'customHeight': '40rem', // Adjust the value as needed
-        
       },
       fontFamily: {
         'Nunito': ['Nunito', 'sans-serif'],
